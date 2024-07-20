@@ -74,7 +74,8 @@ def compute_metrics(pred):
 
 ### 4.模型训练
 
-![image-20240718160236689](C:\Users\29913\AppData\Roaming\Typora\typora-user-images\image-20240718160236689.png)
+![image](https://github.com/user-attachments/assets/3ded7fcc-b93c-420f-8420-f605e398f484)
+
 
 ## 模型分析
 
