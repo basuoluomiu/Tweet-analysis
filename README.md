@@ -108,6 +108,10 @@ classifier = pipeline("text-classification",model="bert-base-uncased-finetuned-e
 
 new_data = 'I finally snagged tickets to Jay's concert！'
 ```
+out:
+```python
+[{'label': 'LABEL_1', 'score': 0.933964729309082}]
+```
 
 ## 集成到web
 
@@ -139,6 +143,8 @@ def predict():
 ```
 
 在前端页面设置一个仪表盘，在用户预测完成后显示预测值与置信度
+![image](https://github.com/user-attachments/assets/5f3e2469-9679-44c8-a561-6c9c286e3002)
+
 
 ## 本地部署
 
