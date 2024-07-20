@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>情感分析</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="shortcut icon" href="../static/img/twitter@2x.png">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="../static/js/echarts/dist/echarts.min.js"></script>
+</head>
+<body background="../static/img/img.png">
+<div class="container">
+    <h1>推文情感分析</h1>
+    <textarea id="text" placeholder="请输入..." style="width: 550px"></textarea>
+    <button onclick="analyzeSentiment()">分析</button>
+    <div class="result" id="result"></div>
+    <div id="m1" style="width: 100%;height: 400px"></div>
+</div>
+<script>
+    async function analyzeSentiment() {
+        const text = document.getElementById('text').value;
+        const response = await fetch('/predict', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({text})
+        });
+        const result = await response.json();
+        displayResult(result);
+        updateGaugeChart(result.score);
+    }
+
+    function displayResult(result) {
+        const resultDiv = document.getElementById('result');
+        const label = result.label;
+        const score = (result.score * 100).toFixed(2);
+        resultDiv.innerHTML = `<p><strong>分析结果:</strong> ${label}</p>
+                               <p><strong>置信度:</strong> ${score}%</p>`;
+    }
+
+    function updateGaugeChart(score) {
+        var myChart = echarts.init(document.getElementById('m1'));
+        var option = {
+            series: [
+                {
+                    type: 'gauge',
+                    startAngle: 180,
+                    endAngle: 0,
+                    center: ['50%', '75%'],
+                    radius: '90%',
+                    min: 0,
+                    max: 1,
+                    splitNumber: 8,
+                    axisLine: {
+                        lineStyle: {
+                            width: 6,
+                            color: [
+                                [0.25, '#FF6E76'],
+                                [0.5, '#FDDD60'],
+                                [0.75, '#58D9F9'],
+                                [1, '#7CFFB2']
+                            ]
+                        }
+                    },
+                    pointer: {
+                        icon: 'path://M12.8,0.7l12,40.1H0.7L12.8,0.7z',
+                        length: '12%',
+                        width: 20,
+                        offsetCenter: [0, '-60%'],
+                        itemStyle: {
+                            color: 'auto'
+                        }
+                    },
+                    axisTick: {
+                        length: 12,
+                        lineStyle: {
+                            color: 'auto',
+                            width: 2
+                        }
+                    },
+                    splitLine: {
+                        length: 20,
+                        lineStyle: {
+                            color: 'auto',
+                            width: 5
+                        }
+                    },
+                    axisLabel: {
+                        color: '#464646',
+                        fontSize: 20,
+                        distance: -60,
+                        rotate: 'tangential',
+                        formatter: function (value) {
+                            if (value === 0.875) {
+                                return '极高';
+                            } else if (value === 0.625) {
+                                return '高';
+                            } else if (value === 0.375) {
+                                return '中';
+                            } else if (value === 0.125) {
+                                return '低';
+                            }
+                            return '';
+                        }
+                    },
+                    title: {
+                        offsetCenter: [0, '-10%'],
+                        fontSize: 20
+                    },
+                    detail: {
+                        fontSize: 30,
+                        offsetCenter: [0, '-35%'],
+                        valueAnimation: true,
+                        formatter: function (value) {
+                            return (value * 100).toFixed(2) + '%';
+                        },
+                        color: 'inherit'
+                    },
+                    data: [
+                        {
+                            value: score,
+                            name: '置信度'
+                        }
+                    ]
+                }
+            ]
+        };
+        myChart.setOption(option);
+    }
+</script>
+</body>
+</html>
