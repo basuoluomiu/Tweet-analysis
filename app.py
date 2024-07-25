@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, jsonify
 import torch
 from transformers import pipeline
+import requests
+import random
 
 app = Flask(__name__)
 
@@ -34,6 +36,36 @@ def predict():
     predictions = predict_sentiment(text)
     predictions = matching(predictions)
     return jsonify(predictions)
+
+
+@app.route('/random_tweet', methods=['GET'])
+def random_tweet():
+    url = "https://twitter154.p.rapidapi.com/search/search"
+    querystring = {
+        "query": random.choice(
+            ["life", "work", "love", "friendship", "school", "journey", "emotion", "mood", "feel", "memories",
+             "recall", "Voice", "share", "blessing"]),
+        "section": "top",
+        "min_retweets": "1",
+        "min_likes": "1",
+        "limit": "5",
+        "start_date": "2022-01-01",
+        "language": "en"
+    }
+    headers = {
+        "x-rapidapi-key": "a13224d3f4msh913f30cb347563bp11fb67jsn51277cdf16e5",
+        "x-rapidapi-host": "twitter154.p.rapidapi.com"
+    }
+
+    tweet = None
+    while not tweet:
+        response = requests.get(url, headers=headers, params=querystring)
+        data = response.json().get('results', None)
+        if data:
+            new_data = [tweet['user']['description'] for tweet in data]
+            tweet = new_data[random.randint(0, len(new_data) - 1)] if new_data else None
+
+    return jsonify({'tweet': tweet})
 
 
 if __name__ == '__main__':
