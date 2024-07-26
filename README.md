@@ -163,9 +163,7 @@ def random_tweet():
 ```
 
 在前端页面设置一个仪表盘，在用户预测完成后显示预测值与置信度
-![image](https://github.com/user-attachments/assets/5f3e2469-9679-44c8-a561-6c9c286e3002)
-
-
+![image](https://github.com/user-attachments/assets/29648b3f-747c-4fe8-b942-f5fbb1b64b40)
 ## 本地部署
 
 1.按照requirements.txt安装依赖
