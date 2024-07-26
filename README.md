@@ -141,6 +141,26 @@ def predict():
     predictions = Matching(predictions)
     return jsonify(predictions)
 ```
+定义一个随机推文获取函数，通过第三方api支持商rapidapi提供的api随机获取推文。
+```python
+def random_tweet():
+    url = "https://twitter154.p.rapidapi.com/search/search"
+    querystring = {
+        "query": random.choice(
+            ["life", "work", "love", "friendship", "school", "journey", "emotion", "mood", "feel", "memories",
+             "recall", "Voice", "share", "blessing"]),
+        "section": "top",
+        "min_retweets": "1",
+        "min_likes": "1",
+        "limit": "5",
+        "start_date": "2022-01-01",
+        "language": "en"
+    }
+    headers = {
+        "x-rapidapi-key": "a13224d3f4msh913f30cb347563bp11fb67jsn51277cdf16e5",
+        "x-rapidapi-host": "twitter154.p.rapidapi.com"
+    }
+```
 
 在前端页面设置一个仪表盘，在用户预测完成后显示预测值与置信度
 ![image](https://github.com/user-attachments/assets/5f3e2469-9679-44c8-a561-6c9c286e3002)
